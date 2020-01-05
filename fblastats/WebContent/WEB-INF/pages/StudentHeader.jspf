@@ -1,0 +1,39 @@
+<style>
+.smallfont{
+  	font-family: 'Open Sans', sans-serif;
+  	font-size: 12px;
+}
+.entrybox {
+  
+    border:0;
+    border-bottom:1px solid;
+    outline:none;
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<table id="student_header_info" class="smallfont">
+  <tr>
+    <td> Name:</td>
+    <td><input id="name_input" type="text" value="nn" name="name" class="entrybox" /></td>
+    <td> Grade:</td>
+    <td>
+      <select id="grade_input" class="grade_input entrybox">
+      <option value="9">Freshman</option>
+      <option value="10">Sophomore</option>
+      <option value="11">Junior</option>
+      <option value="12">Senior</option>
+      </select>
+      </td>
+  </tr>
+  <tr>
+    <td> Total Hours:</td>
+    <td><input id="total_hrs" type="text" value=""  name="totalHours" class="total_hrs entrybox" /></td>
+      <td> Category:</td>
+      <td>
+        <input type="radio" id="ccommunity" name="category" value="Community">Community&nbsp;
+        <input type="radio" id="cservice" name="category" value="Service">Service&nbsp;
+	    <input type="radio" id="cachievement" name="category" value="Achievement">Achievement</td>
+  </tr>
+</table>

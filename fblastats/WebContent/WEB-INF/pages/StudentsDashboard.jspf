@@ -1,0 +1,41 @@
+<style>
+#header_Div {
+  	font-family: 'Open Sans', sans-serif;
+  	background:#8998db;
+  	margin: 0 auto 0 auto;  
+  	width:100%; 
+  	text-align:center;
+  	margin: 20px 0px 20px 0px;   
+	}
+	p {
+  		font-size:12px;
+  		text-decoration: none;
+  		color:#ffffff;
+	}
+	h1 {
+  		font-size:1.5em;
+  		color:#525252;
+	}
+	tr { height: 20px } 
+</style>
+
+<script type="text/javascript">
+$(document).ready(function() {});
+</script>
+
+<div id="header_Div"><h1>Northview FBLA</h1></div>
+
+<table align="right" style="font-size:11px;"><tr><td><a href="#" onclick="addNewStudent()">Add student</a></td></tr></table>
+
+<table id="studentstable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+  <thead>
+    <tr>
+	  <th>Id</th>
+	  <th>Student Name</th>
+	  <th>Grade</th>
+ 	  <th>Category</th>
+ 	  <th>Total Hours</th>
+ 	  <th>Action</th>
+    </tr>
+ </thead>
+</table>
