@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
-@WebServlet("/DeleteStudentServlet")
+@WebServlet("/DeleteStudentServlet1")
 public class DeleteStudentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +30,7 @@ public class DeleteStudentServlet extends HttpServlet {
 
 		// Values from the form
 		String studentid = request.getParameter("studentid");
-		boolean studentDeleted = FblaManager.deleteStudent(studentid);
+		boolean studentDeleted = true;//FblaManager.deleteStudent(studentid);
 		if (studentDeleted) resultMap.put("success", "Student was deleted successfully");
 		else resultMap.put("error", "Student was not deleted");
 		

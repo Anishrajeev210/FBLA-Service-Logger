@@ -13,8 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-@WebServlet("/FblaServlet")
+@WebServlet("/FblaServlet1")
 public class FblaServlet extends HttpServlet {
+	//http://localhost:9080/fblastats/FblaServlet#
 	private static final long serialVersionUID = 1L;
 
 	public FblaServlet() {
