@@ -30,7 +30,7 @@ public class DeleteStudentServlet extends HttpServlet {
 
 		// Values from the form
 		String studentid = request.getParameter("studentid");
-		boolean studentDeleted = true;//FblaManager.deleteStudent(studentid);
+		boolean studentDeleted = FblaManager.deleteStudent(studentid);
 		if (studentDeleted) resultMap.put("success", "Student was deleted successfully");
 		else resultMap.put("error", "Student was not deleted");
 		

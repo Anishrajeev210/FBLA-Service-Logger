@@ -14,32 +14,41 @@ public class FblaDAO {
 		ArrayList<Student> students = new ArrayList<Student>();
 		HashMap<Integer, Student> studentsMap = new HashMap<Integer, Student>();
 		Connection connection = null;
+		PreparedStatement ps = null; 
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
 
-			String sql = "SELECT s.id, s.name, s.grade, a.event_name, a.event_date, a.hours from fbla_students s " +
+			String sql = "SELECT s.id, s.name, s.grade, s.phone, a.aid, a.event_name, a.event_date, a.hours from fbla_students s " +
 					" LEFT OUTER JOIN student_activity a on s.id = a.id";
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ResultSet resultSet = statement.executeQuery(sql);
-			while(resultSet.next()) {
-				// iterate & read the result set
-				Student student = new Student();
+			ps = connection.prepareStatement(sql);
+			ResultSet resultSet = ps.executeQuery();
+			while(resultSet.next()) {// iterate & read the result set
+				
+				Student student = new Student();//student
 				StudentActivity activity = new StudentActivity();
 				student.setStudentid(resultSet.getInt("id"));
 				student.setName(resultSet.getString("name"));
 				student.setGrade(resultSet.getInt("grade"));
+				student.setPhone(resultSet.getLong("phone"));
 
+				activity.setActivityid(resultSet.getInt("aid"));//activity
 				activity.setEventName(resultSet.getString("event_name"));
-				activity.setDate(resultSet.getInt("event_date"));
+				activity.setDate(resultSet.getString("event_date"));
 				activity.setHours(resultSet.getInt("hours"));
-				student.getStudentActivites().add(activity);
-
-				studentsMap.put(new Integer(student.getStudentid()), student);
-
-				System.out.print("id=" + student.getStudentid() + " Evtname=" + activity.getEventName() + " date=" + activity.getDate() + " hrs=" + activity.getHours());
+				
+				if (studentsMap != null && studentsMap.get(new Integer(student.getStudentid())) != null) {
+					Student tempStudent = (Student) studentsMap.get(new Integer(student.getStudentid()));
+					tempStudent.getStudentActivites().add(activity);	
+					studentsMap.put(new Integer(student.getStudentid()), tempStudent);
+				}
+				else {
+					student.getStudentActivites().add(activity);
+					studentsMap.put(new Integer(student.getStudentid()), student);
+				}
+				//System.out.print("id=" + student.getStudentid() + " Evtname=" + activity.getEventName() + " date=" + activity.getDate() + " hrs=" + activity.getHours());
 			}
 			//Move map values into an list
 			students.addAll(studentsMap.values());
@@ -54,19 +63,20 @@ public class FblaDAO {
 					totalHours = totalHours + activity.getHours();
 				}
 				if (totalHours <= 50) {
-					category = "CAS Community";
+					category = "Community";
 				}
 				else if (totalHours > 50 && totalHours <=200) {
-					category = "CAS Service";
+					category = "Service";
 				}
 				else if (totalHours > 200) {
-					category = "CSA Achievement";
+					category = "Achievement";
 				}
 				student.setTotalHours(totalHours);
 				student.setCategory(category);
-				System.out.print("id=" + student.getStudentid() + " hours=" + totalHours + " category:" + category); 
+				//System.out.print("id=" + student.getStudentid() + " hours=" + totalHours + " category:" + category); 
 			}
 			ps.close();
+			System.out.println("Students:" + students.toString());
 		}
 		catch(Exception e) {
 			System.err.println(e.getMessage());
@@ -75,8 +85,8 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if (ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -88,12 +98,13 @@ public class FblaDAO {
 	public static Student loadStudent(int studentid, String yyyymm) {
 		Student student = new Student();
 		Connection connection = null;
-		Statement statement = null;
+		//Statement statement = null;
+		PreparedStatement ps = null;
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
-			statement = connection.createStatement();
-			statement.setQueryTimeout(30);
+			//statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
 
 			/*ResultSet resultSet1 = statement.executeQuery("SELECT s.id, s.name, s.grade, a.event_name, a.event_date, a.hours from fbla_students s " +
 					"LEFT OUTER JOIN student_activity a on s.id=a.id where s.id="+studentid);
@@ -106,19 +117,23 @@ public class FblaDAO {
 			ArrayList<StudentActivity> activites = new ArrayList<StudentActivity>(); 
 			int totalHours = 0;
 			String category = "";
-			String sql = "SELECT s.id, s.name, s.grade, a.event_name, a.event_date, a.hours from fbla_students s " +
+			String sql = "SELECT s.id, s.name, s.grade, s.phone, a.aid, a.event_name, a.event_date, a.hours from fbla_students s " +
 					"LEFT OUTER JOIN student_activity a on s.id=a.id where s.id="+studentid;
-			ResultSet resultSet = statement.executeQuery(sql);
+			ps = connection.prepareStatement(sql);
+			ResultSet resultSet = ps.executeQuery();
 			while(resultSet.next()) {
 				// iterate & read the result set
 				StudentActivity activity = new StudentActivity();
 				student.setStudentid(resultSet.getInt("id"));
 				student.setName(resultSet.getString("name"));
 				student.setGrade(resultSet.getInt("grade"));
+				student.setPhone(resultSet.getInt("phone"));
 
+				activity.setActivityid(resultSet.getInt("aid"));
 				activity.setStudentid(resultSet.getInt("id"));
+				activity.setStudentIdActivityId(activity.getStudentid()+"AND"+activity.getActivityid());
 				activity.setEventName(resultSet.getString("event_name"));
-				activity.setDate(resultSet.getInt("event_date"));
+				activity.setDate(resultSet.getString("event_date"));
 				activity.setHours(resultSet.getInt("hours"));
 				totalHours = totalHours + activity.getHours();
 				student.setTotalHours(totalHours);
@@ -139,6 +154,7 @@ public class FblaDAO {
 				category = "CSA Achievement";
 			}
 			student.setCategory(category);
+			ps.close();
 		}
 		catch(Exception e) {
 			System.err.println(e.getMessage());
@@ -147,10 +163,8 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null) {
-					statement.close();
-					connection.close();
-				}
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -159,19 +173,21 @@ public class FblaDAO {
 		return student;
 	}
 
-	public static boolean addStudent(String name, int grade) {
+	public static boolean addStudent(String name, int grade, long phone) {
 		boolean result = false;
 		Connection connection = null;
+		PreparedStatement ps = null;
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
+			//Statement statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
 
-			String sql = "INSERT INTO fbla_students(name, grade) values (?, ?)";
-			PreparedStatement ps = connection.prepareStatement(sql);
+			String sql = "INSERT INTO fbla_students(name, grade, phone) values (?, ?, ?)";
+			ps = connection.prepareStatement(sql);
 			ps.setString(1, name);
 			ps.setInt(2, grade);
+			ps.setLong(3, phone);
 			int count = ps.executeUpdate();
 			if (count == 1) result = true; 
 			/*ResultSet resultSet = statement.executeQuery("SELECT * from fbla_students");
@@ -189,8 +205,8 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -202,14 +218,15 @@ public class FblaDAO {
 	public static boolean deleteStudent(int studentid) {
 		boolean result = false;
 		Connection connection = null;
+		PreparedStatement ps = null;
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
+			//Statement statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
 
 			String sql = "DELETE from fbla_students where id=?";
-			PreparedStatement ps = connection.prepareStatement(sql);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, studentid);
 			int count = ps.executeUpdate();
 			if (count == 1) result = true;
@@ -221,8 +238,8 @@ public class FblaDAO {
 		}
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -234,26 +251,47 @@ public class FblaDAO {
 	public static boolean addStudentActivity(int studentid, int eventhours, String eventname, String eventdate) {
 		boolean result = false;
 		Connection connection = null;
+		PreparedStatement ps = null;
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
-
-			String sql = "INSERT INTO student_activity(id, event_name, event_date, hours) values (?, ?, ?, ?)";
-			PreparedStatement ps = connection.prepareStatement(sql);
+			//Statement statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
+			
+			// first get max activity number
+			int newActivityId = 1;
+			String sql = "select max(aid) as activity_id from student_activity where id=?";
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, studentid);
-			ps.setString(2, eventname);
-			ps.setString(3, eventdate);
-			ps.setInt(4, eventhours);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				newActivityId = resultSet.getInt("activity_id");
+				newActivityId++;
+			}
+			try{
+				resultSet.close();
+				ps.close();
+				connection.close();
+			} catch(Exception e) {}
+			
+			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
+			sql = "INSERT INTO student_activity(aid, id, event_name, event_date, hours) values (?, ?, ?, ?, ?)";
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, newActivityId);
+			ps.setInt(2, studentid);
+			ps.setString(3, eventname);
+			ps.setString(4, eventdate);
+			ps.setInt(5, eventhours);
 			int count = ps.executeUpdate();
 			if (count == 1) result = true; 
-			ResultSet resultSet = statement.executeQuery("SELECT * from student_activity where id="+studentid);
+			
+			/*For debug purposes
+			 * ResultSet resultSet = statement.executeQuery("SELECT * from student_activity where id="+studentid);
 			while(resultSet.next()) {
 				// iterate & read the result set
 				System.out.print("id=" + resultSet.getInt("id") + " hours=" + eventhours + 
 						" eventname=" + resultSet.getString("event_name") + " eventdate=" + resultSet.getString("event_date"));
-			}
+			}*/
 			ps.close();
 		}
 		catch(Exception e) {
@@ -263,8 +301,8 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -273,29 +311,31 @@ public class FblaDAO {
 		return result;
 	}
 
-	public static boolean updateStudentActivity(int studentid, int eventhours, String eventname, String eventdate) {
+	public static boolean updateStudentActivity(int studentid, int activityid, int eventhours, String eventname, String eventdate) {
 		boolean result = false;
 		Connection connection = null;
+		PreparedStatement ps = null;
 		try {
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
+			//Statement statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
 
-			String sql = "UPDATE student_activity set event_name=?, event_date=?, hours=? where id=?";
-			PreparedStatement ps = connection.prepareStatement(sql);
+			String sql = "UPDATE student_activity set event_name=?, event_date=?, hours=? where aid=?";
+			ps = connection.prepareStatement(sql);
 			ps.setString(1, eventname);
 			ps.setString(2, eventdate);
 			ps.setInt(3, eventhours);
-			ps.setInt(4, studentid);
+			ps.setInt(4, activityid);
 			int count = ps.executeUpdate();
 			if (count == 1) result = true; 
+			/* For debug purposes
 			ResultSet resultSet = statement.executeQuery("SELECT * from student_activity where id="+studentid);
 			while(resultSet.next()) {
 				// iterate & read the result set
 				System.out.print("id=" + resultSet.getInt("id") + " hours=" + eventhours + 
 						" eventname=" + resultSet.getString("event_name") + " eventdate=" + resultSet.getString("event_date"));
-			}
+			}*/
 			ps.close();
 		}
 		catch(Exception e) {
@@ -305,24 +345,25 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
 			}
 		}
 		return result;
-	}	
-
+	}
 	public static void addTables() {
 		Connection connection = null;
+		Statement statement  = null;
+		ResultSet resultSet = null;
 		try {
 			// create a database connection
 			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
 			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
 			//fbla_students
@@ -334,7 +375,7 @@ public class FblaDAO {
 					"    phone INT (10)," + 
 					"    grade INT" + 
 					")");
-			ResultSet resultSet = statement.executeQuery("SELECT * from fbla_students");
+			resultSet = statement.executeQuery("SELECT * from fbla_students");
 			while(resultSet.next()) {
 				// iterate & read the result set
 				System.out.println("name = " + resultSet.getString("name"));
@@ -345,8 +386,9 @@ public class FblaDAO {
 			statement.executeUpdate("DROP TABLE IF EXISTS student_activity");
 			statement.executeUpdate("CREATE TABLE student_activity (" + 
 					"    id CONSTRAINT student_id REFERENCES fbla_students (id)," + 
+					"    aid    INTEGER," + 
 					"    event_name VARCHAR (100)," + 
-					"    event_date INT," + 
+					"    event_date VARCHAR (20)," + 
 					"    hours      INT" + 
 					")");
 			resultSet = statement.executeQuery("SELECT * from student_activity");
@@ -363,8 +405,9 @@ public class FblaDAO {
 
 		finally {
 			try {
-				if(connection != null)
-					connection.close();
+				if(resultSet != null) resultSet.close();
+				if(statement != null) statement.close();
+				if(connection != null) connection.close();
 			}
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
@@ -372,6 +415,36 @@ public class FblaDAO {
 		}
 	}
 
+	public static void testDbConnectivity() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		boolean dbExists = true;
+		try {
+			Class.forName("org.sqlite.JDBC"); // load the sqlite-JDBC driver using the current class loader
+			connection = DriverManager.getConnection("jdbc:sqlite:fbla");
+			String sql = "select * from fbla_students";
+			ps = connection.prepareStatement(sql);
+			ps.executeQuery();
+			ps.close();
+		}
+		catch(Exception e) {
+			System.err.println(e.getMessage());
+			e.printStackTrace();
+			System.out.println("Need to Create Database.");
+			dbExists = false;
+		}
+		finally {
+			try {
+				if(ps != null) ps.close();
+				if(connection != null) connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
+		}
+		if (!dbExists) addTables();
+	}
+	
 	/*public static void testDBConnectivity() {
 		Connection connection = null;
 		try {

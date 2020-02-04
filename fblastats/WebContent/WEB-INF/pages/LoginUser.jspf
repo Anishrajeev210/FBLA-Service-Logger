@@ -19,9 +19,10 @@
 	.box{
   	background:white;
   	width:300px;
+  	height:100px;
   	border-radius:6px;
   	margin: 0 auto 0 auto;
-  	padding:0px 0px 70px 0px;
+  	padding:0px 7px 70px 0px;
   	border: #2980b9 4px solid; 
 	}
 	.email{
@@ -54,7 +55,7 @@
   	margin-top:20px;
   	margin-bottom:20px;
   	float:left;
-  	margin-left:16px;
+  	margin-left:86px;
   	font-weight:800;
   	font-size:0.8em;
 	}
@@ -82,6 +83,7 @@
 <form method="post" action="FblaServlet">
 		<div class="box">
 			<h1>Northview FBLA</h1>
+			<!-- 
 			<input id="email_input" type="text" name="email" value="email" 
 			onFocus="field_focus(this, 'email');" onblur="field_blur(this, 'email');" class="email" />
 			
@@ -90,10 +92,11 @@
 			
 			<input id="grade_input" type="text" name="grade" value="grade" style="display:none;"
 			onFocus="field_focus(this, 'email');" onblur="field_blur(this, 'email');" class="email" />
-  			
-  			<a href="#" onclick="signIn();"><div id="btn1" class="btn">Sign In</div></a>
+  			 -->
+  			<a href="#" onclick="signIn();"><div id="btn1" class="btn">Click here to access fbla students</div></a>
 			
-			<a href="#" onclick="signUp();"><div id="btn2">Sign Up</div></a>
+			<!-- <a href="#" onclick="signUp();"><div id="btn2">Sign Up</div></a>-->
   		</div> <!-- End Box -->
-  	</form>
-	<p>Forgot your password? <u style="color:#f1c40f;">Click Here!</u></p>
+</form>
+<p>Anish Rajeev <u style="color:#f1c40f;">Northview</u></p>
+<!-- <p>Forgot your password? <u style="color:#f1c40f;">Click Here!</u></p> -->

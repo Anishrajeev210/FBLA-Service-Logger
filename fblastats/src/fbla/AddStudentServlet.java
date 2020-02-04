@@ -31,7 +31,8 @@ public class AddStudentServlet extends HttpServlet {
 		// Values from the form
 		String studentname = request.getParameter("studentname");
 		String studentgrade = request.getParameter("studentgrade");
-		boolean studentAdded = FblaManager.addStudentInfo(studentname, studentgrade);
+		String studentphone = request.getParameter("studentphone");
+		boolean studentAdded = FblaManager.addStudentInfo(studentname, studentgrade, studentphone);
 		if (studentAdded) resultMap.put("success", "Student was added successfully");
 		else resultMap.put("error", "Student was not added");
 		

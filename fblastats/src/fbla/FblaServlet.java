@@ -24,12 +24,14 @@ public class FblaServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//FblaDAO.addTables();
+		FblaDAO.testDbConnectivity();
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		request.getRequestDispatcher("/WEB-INF/pages/fbla.jsp").forward(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		//FblaDAO.addTables();
 		Gson gson = new Gson();
 		// Values from the form
 		String m = request.getParameter("mode");

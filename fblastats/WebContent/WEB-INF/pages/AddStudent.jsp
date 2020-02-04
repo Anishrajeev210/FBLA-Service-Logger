@@ -13,10 +13,16 @@
   }
 </style>
 
+<div id="add_student_msg_div" style="color:#CC5500"></div>
+
 <table id="add_student_info" class="smallfont">
   <tr>
     <td> Name:</td>
     <td><input id="new_name_input" type="text" name="name" class="entrybox" /></td>
+   </tr>
+   <tr>
+    <td> School Id:</td>
+    <td><input id="new_phone_id_input" type="number" name="phone" class="entrybox" /></td>
    </tr>
    <tr>  
     <td> Grade:</td>

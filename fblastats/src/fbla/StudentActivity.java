@@ -2,12 +2,19 @@ package fbla;
 
 public class StudentActivity {
 	
+	private int activityid;
 	private int studentid;
 	private int hours;
-	private int date;//yyyymmyy
+	private String date;// mm/dd/yyyy
 	private String eventName;
-	private String formattedDate;	
-
+	private String studentIdActivityId;
+	
+	public int getActivityid() {
+		return activityid;
+	}
+	public void setActivityid(int activityid) {
+		this.activityid = activityid;
+	}
 	public int getStudentid() {
 		return studentid;
 	}
@@ -27,18 +34,25 @@ public class StudentActivity {
 	public void setHours(int hours) {
 		this.hours = hours;
 	}
-	public int getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(int date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
-	public String getFormattedDate() {
-		return formattedDate;
+	public String getStudentIdActivityId() {
+		return studentIdActivityId;
 	}
-	public void setFormattedDate(String formattedDate) {
-		this.formattedDate = formattedDate;
+	public void setStudentIdActivityId(String studentIdActivityId) {
+		this.studentIdActivityId = studentIdActivityId;
 	}
-
+	public String toString() {
+		String s = 
+				" name:" + eventName +
+				" hours:" + hours + 
+				" date:" + date +
+				" said:" + studentIdActivityId;
+		return s;
+	}
 }
 

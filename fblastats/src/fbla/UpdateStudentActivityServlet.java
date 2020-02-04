@@ -29,18 +29,27 @@ public class UpdateStudentActivityServlet extends HttpServlet {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
 		// Values from the form
-		//{mode:mode, studentid:studentid, eventname:eventname, eventdate:eventdate, eventhours:eventhours}
+		//{mode:mode, studentid:studentid, activityid:activityid, eventname:eventname, eventdate:eventdate, eventhours:eventhours}
 		String mode = request.getParameter("mode");
 		String studentid = request.getParameter("studentid");
+		String studentidactivityid = request.getParameter("studentidactivityid");
 		String eventhours = request.getParameter("eventhours");
 		String eventname = request.getParameter("eventname");
 		String eventdate = request.getParameter("eventdate");
+		String activityid = "";
 		boolean studentUpdated = false;
 		if (mode.equals("add_activity")) {
 			studentUpdated = FblaManager.addStudentActivity(Integer.parseInt(studentid), Integer.parseInt(eventhours), eventname, eventdate);
-		}
+		}		
 		else if (mode.equals("edit_activity")) {
-			studentUpdated = FblaManager.updateStudentActivity(Integer.parseInt(studentid), Integer.parseInt(eventhours), eventname, eventdate);
+			if (studentidactivityid != null) {
+				int seperatorIndex = studentidactivityid.indexOf("AND");
+				if (seperatorIndex > 0) {
+					studentid = studentidactivityid.substring(0, seperatorIndex);
+					activityid = studentidactivityid.substring(seperatorIndex + "AND".length());
+				}
+			}
+			studentUpdated = FblaManager.updateStudentActivity(Integer.parseInt(studentid), Integer.parseInt(activityid), Integer.parseInt(eventhours), eventname, eventdate);
 		}
 		resultMap.put("success", studentUpdated);
 		

@@ -29,8 +29,7 @@ public class FblaManager {
 		StudentActivity activity = new StudentActivity();
 		activity.setEventName("eventName1");
 		activity.setHours(10);
-		activity.setDate(20191120);
-		activity.setFormattedDate(getParsedDate(20191120));
+		activity.setDate("02/12/2020");
 
 
 		studentActivites.add(activity);
@@ -38,7 +37,7 @@ public class FblaManager {
 		activity = new StudentActivity();
 		activity.setEventName("eventName2");
 		activity.setHours(11);
-		activity.setDate(20191120);
+		activity.setDate("02/12/2020");
 		studentActivites.add(activity);
 
 		student.setStudentActivites(studentActivites);
@@ -53,8 +52,12 @@ public class FblaManager {
 		return FblaDAO.loadStudent(Integer.parseInt(studentid), monthyear);
 	}
 	
-	public static boolean addStudentInfo(String name, String grade) {
-		return FblaDAO.addStudent(name, Integer.parseInt(grade));
+	public static boolean addStudentInfo(String name, String grade, String phone) {
+		int _grade = 0;
+		long _phone = 0;
+		try {_grade = Integer.parseInt(grade);} catch (Exception e) {}
+		try {_phone = Long.parseLong(phone);} catch (Exception e) {}
+		return FblaDAO.addStudent(name, _grade, _phone);
 	}
 	
 	public static boolean deleteStudent(String studentid) {
@@ -65,8 +68,8 @@ public class FblaManager {
 		return FblaDAO.addStudentActivity(studentid, eventhours, eventname, eventdate);
 	}
 	
-	public static boolean updateStudentActivity(int studentid, int eventhours, String eventname, String eventdate) {
-		return FblaDAO.updateStudentActivity(studentid, eventhours, eventname, eventdate);
+	public static boolean updateStudentActivity(int studentid, int activityid, int eventhours, String eventname, String eventdate) {
+		return FblaDAO.updateStudentActivity(studentid, activityid, eventhours, eventname, eventdate);
 	}
 	
 	private static String getParsedDate(int yyyymmdd) {

@@ -23,15 +23,16 @@
 $(document).ready(function() {});
 </script>
 
-<div id="header_Div"><h1>Northview FBLA</h1></div>
+<div id="header_Div"><h1>Northview FBLA Community service hours</h1></div>
 
 <table align="right" style="font-size:11px;"><tr><td><a href="#" onclick="addNewStudent()">Add student</a></td></tr></table>
 
-<table id="studentstable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+<table id="studentstable" class="display" style="overflow-x:auto">
   <thead>
     <tr>
 	  <th>Id</th>
 	  <th>Student Name</th>
+	  <th>Student Id</th>
 	  <th>Grade</th>
  	  <th>Category</th>
  	  <th>Total Hours</th>

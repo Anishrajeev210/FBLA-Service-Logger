@@ -7,6 +7,7 @@ public class Student {
 	private int studentid;
 	private String name;
 	private int grade;
+	private long phone;
 	private String category;
 	private int totalHours;
 	private ArrayList<StudentActivity> studentActivites = new ArrayList<StudentActivity>();
@@ -22,6 +23,12 @@ public class Student {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public long getPhone() {
+		return phone;
+	}
+	public void setPhone(long phone) {
+		this.phone = phone;
 	}
 	public int getGrade() {
 		return grade;
@@ -48,6 +55,15 @@ public class Student {
 		this.studentActivites = studentActivites;
 	}
 	
-	
+	public String toString() {
+		String s = 
+		"id:" + studentid + 
+		"name:" + name + 
+		"grade:" + grade +
+		"category:" + category +
+		"totalHours:" + totalHours +
+		"activites:" + studentActivites.toString();
+		return s;
+	}
 }
 

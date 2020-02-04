@@ -2,8 +2,8 @@
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 <script type="text/javascript">
-$(document).ready(function(){
-   
+$(document).ready(function() {
+	
 });
 </script>
 
